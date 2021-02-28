@@ -54,7 +54,7 @@ def save_image(img_url, verse):
     # create font object with the font file and specify
     # desired size
 
-    font = ImageFont.truetype('C:\\Users\\tomlo\\PycharmProjects\\L4\\biblebackground\\BebasNeue-Regular.ttf', size=60)
+    font = ImageFont.truetype('.\\BebasNeue-Regular.ttf', size=60)
 
     #TODO: FIX THIS PARTs
     #Chooses the color that will be different from the background
