@@ -22,7 +22,7 @@ def get_verse_from_html(soup):
     verseReference = verseReference[:-6]
     while len(verse) >= 80:
         #Makes sure to break at the end of a space
-        i = 80
+        i = 79
         while verse[i] != ' ':
             i = i - 1
         #needed to get rid of the space
