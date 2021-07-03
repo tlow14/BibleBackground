@@ -1,5 +1,5 @@
 import requests
-from bs4 import BeautifulSoup
+import json
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 import ctypes
@@ -9,17 +9,14 @@ import ctypes
 
 def grab_html(website):
     page = requests.get(website)
-    soup = BeautifulSoup(page.content, 'html.parser')
-    return soup
+    json_data = json.loads(page.text)
+    return json_data
 
-def get_verse_from_html(soup):
-    verseElement = soup.find(class_="verse-wrapper").next_element
-    verse = verseElement.get_text()
-    verse = verse.replace('\n', ' ')
-    verseReference = verseElement.nextSibling.get_text()
-
+def get_verse_from_html(verseJson):
+    #grabs the text from the verse
+    verse = verseJson.get('verse').get('details').get('text')
+    reference = verseJson.get('verse').get('details').get('reference')
     newVerse = ""
-    verseReference = verseReference[:-6]
     while len(verse) >= 80:
         #Makes sure to break at the end of a space
         i = 79
@@ -31,7 +28,7 @@ def get_verse_from_html(soup):
 
         newVerse = newVerse + verse[:i] + '\n'
         verse = verse[i:]
-    newVerse = newVerse + verse + '\n' + verseReference
+    newVerse = newVerse + verse + '\n' + reference
     return newVerse
 
 def get_picture_random():
@@ -54,9 +51,9 @@ def save_image(img_url, verse):
     # create font object with the font file and specify
     # desired size
 
-    font = ImageFont.truetype('.\\BebasNeue-Regular.ttf', size=60)
+    font = ImageFont.truetype('C:\\Users\\tomlo\\PycharmProjects\\L4\\BebasNeue-Regular.ttf', size=60)
 
-    #TODO: FIX THIS PARTs
+    #TODO: FIX THIS PART
     #Chooses the color that will be different from the background
     imageColor = img.convert("RGB")
     origianlX = 1000
@@ -105,7 +102,7 @@ def set_background(fileLocation):
 
 
 if __name__ == '__main__':
-    bibleHtml = grab_html("https://www.bible.com/verse-of-the-day")
+    bibleHtml = grab_html("http://www.ourmanna.com/verses/api/get?format=json")
     verse = get_verse_from_html(bibleHtml)
     picture_url = get_picture_random()
     save_image(picture_url, verse)
